@@ -25,11 +25,13 @@ const Duration _kDropdownMenuDuration = Duration(milliseconds: 300);
 const double _kMenuItemHeight = kMinInteractiveDimension;
 const double _kDenseButtonHeight = 24.0;
 const EdgeInsets _kMenuItemPadding = EdgeInsets.symmetric(horizontal: 16.0);
-const EdgeInsetsGeometry _kAlignedButtonPadding = EdgeInsetsDirectional.only(start: 16.0, end: 4.0);
+const EdgeInsetsGeometry _kAlignedButtonPadding =
+    EdgeInsetsDirectional.only(start: 16.0, end: 4.0);
 const EdgeInsets _kUnalignedButtonPadding = EdgeInsets.zero;
 
 /// A builder to customize the selected menu item.
-typedef SelectedMenuItemBuilder = Widget Function(BuildContext context, Widget child);
+typedef SelectedMenuItemBuilder = Widget Function(
+    BuildContext context, Widget child);
 
 /// A builder to customize the dropdown menu.
 typedef DropdownBuilder = Widget Function(BuildContext context, Widget child);
@@ -38,7 +40,8 @@ typedef DropdownBuilder = Widget Function(BuildContext context, Widget child);
 typedef OnMenuStateChangeFn = void Function(bool isOpen);
 
 /// Signature for the callback for the match function used for searchable dropdowns.
-typedef SearchMatchFn<T> = bool Function(DropdownItem<T> item, String searchValue);
+typedef SearchMatchFn<T> = bool Function(
+    DropdownItem<T> item, String searchValue);
 
 /// A Material Design button for selecting from a list of items.
 ///
@@ -391,7 +394,8 @@ class DropdownButton2<T> extends StatefulWidget {
   State<DropdownButton2<T>> createState() => _DropdownButton2State<T>();
 }
 
-class _DropdownButton2State<T> extends State<DropdownButton2<T>> with WidgetsBindingObserver {
+class _DropdownButton2State<T> extends State<DropdownButton2<T>>
+    with WidgetsBindingObserver {
   int? _selectedIndex;
   _DropdownRoute<T>? _dropdownRoute;
   Orientation? _lastOrientation;
@@ -454,7 +458,8 @@ class _DropdownButton2State<T> extends State<DropdownButton2<T>> with WidgetsBin
     WidgetsBinding.instance.removeObserver(this);
     widget.valueListenable?.removeListener(_updateSelectedIndex);
     widget.multiValueListenable?.removeListener(_updateSelectedIndex);
-    widget.openDropdownListenable?.removeListener(_programmaticallyOpenDropdown);
+    widget.openDropdownListenable
+        ?.removeListener(_programmaticallyOpenDropdown);
     _removeDropdownRoute();
     _focusNode.removeListener(_handleFocusChanged);
     _internalNode?.dispose();
@@ -514,7 +519,8 @@ class _DropdownButton2State<T> extends State<DropdownButton2<T>> with WidgetsBin
     }
 
     if (widget.openDropdownListenable != oldWidget.openDropdownListenable) {
-      oldWidget.openDropdownListenable?.removeListener(_programmaticallyOpenDropdown);
+      oldWidget.openDropdownListenable
+          ?.removeListener(_programmaticallyOpenDropdown);
       widget.openDropdownListenable?.addListener(_programmaticallyOpenDropdown);
     }
   }
@@ -524,7 +530,8 @@ class _DropdownButton2State<T> extends State<DropdownButton2<T>> with WidgetsBin
         widget.items!.isEmpty ||
         (_currentValue == null &&
             widget.items!
-                .where((DropdownItem<T> item) => item.enabled && item.value == _currentValue)
+                .where((DropdownItem<T> item) =>
+                    item.enabled && item.value == _currentValue)
                 .isEmpty)) {
       _selectedIndex = null;
       return;
@@ -553,26 +560,31 @@ class _DropdownButton2State<T> extends State<DropdownButton2<T>> with WidgetsBin
     _buttonRect.value = _getButtonRect();
   }
 
-  TextStyle? get _textStyle => widget.style ?? Theme.of(context).textTheme.titleMedium;
+  TextStyle? get _textStyle =>
+      widget.style ?? Theme.of(context).textTheme.titleMedium;
 
   Rect _getButtonRect() {
     // InputDecorator is a parent of _buttonRect (to avoid the dropdown menu opening under the button's error/helper),
     // so we need to consider its padding in additional to _buttonRect.
-    final EdgeInsets contentPadding = _getInputDecorationPadding() ?? EdgeInsets.zero;
+    final EdgeInsets contentPadding =
+        _getInputDecorationPadding() ?? EdgeInsets.zero;
     final NavigatorState navigator = Navigator.of(context,
-        rootNavigator: _dropdownStyle.isFullScreen ?? _dropdownStyle.useRootNavigator);
+        rootNavigator:
+            _dropdownStyle.isFullScreen ?? _dropdownStyle.useRootNavigator);
 
-    final RenderBox itemBox = _buttonRectKey.currentContext!.findRenderObject()! as RenderBox;
-    final Rect itemRect =
-        itemBox.localToGlobal(Offset.zero, ancestor: navigator.context.findRenderObject()) &
-            itemBox.size;
+    final RenderBox itemBox =
+        _buttonRectKey.currentContext!.findRenderObject()! as RenderBox;
+    final Rect itemRect = itemBox.localToGlobal(Offset.zero,
+            ancestor: navigator.context.findRenderObject()) &
+        itemBox.size;
 
     final denseRect = contentPadding.inflateRect(itemRect);
 
     if (widget._inputDecoration?.isDense == false) {
       final extraHeight = kMinInteractiveDimension - denseRect.height;
       if (extraHeight > 0) {
-        return (contentPadding + EdgeInsets.symmetric(vertical: extraHeight / 2))
+        return (contentPadding +
+                EdgeInsets.symmetric(vertical: extraHeight / 2))
             .inflateRect(itemRect);
       }
     }
@@ -585,10 +597,11 @@ class _DropdownButton2State<T> extends State<DropdownButton2<T>> with WidgetsBin
     if (widget._inputDecoration case final decoration?) {
       final TextDirection? textDirection = Directionality.maybeOf(context);
       // Use inputDecorationTheme.visualDensity when added (https://github.com/flutter/flutter/issues/166201#issuecomment-2774622584)
-      final Offset densityOffset = Theme.of(context).visualDensity.baseSizeAdjustment;
-      final EdgeInsets? contentPadding =
-          (decoration.contentPadding ?? Theme.of(context).inputDecorationTheme.contentPadding)
-              ?.resolve(textDirection);
+      final Offset densityOffset =
+          Theme.of(context).visualDensity.baseSizeAdjustment;
+      final EdgeInsets? contentPadding = (decoration.contentPadding ??
+              Theme.of(context).inputDecorationTheme.contentPadding)
+          ?.resolve(textDirection);
       return contentPadding?.copyWith(
         top: math.max(0, contentPadding.top + densityOffset.dy / 2),
         bottom: math.max(0, contentPadding.bottom + densityOffset.dy / 2),
@@ -608,13 +621,18 @@ class _DropdownButton2State<T> extends State<DropdownButton2<T>> with WidgetsBin
   BorderRadius? _getInputDecorationBorderRadius(InputDecoration decoration) {
     InputBorder? border;
     if (!decoration.enabled) {
-      border = widget._hasError ? decoration.errorBorder : decoration.disabledBorder;
+      border =
+          widget._hasError ? decoration.errorBorder : decoration.disabledBorder;
     } else if (_isFocused) {
-      border = widget._hasError ? decoration.focusedErrorBorder : decoration.focusedBorder;
+      border = widget._hasError
+          ? decoration.focusedErrorBorder
+          : decoration.focusedBorder;
     } else {
-      border = widget._hasError ? decoration.errorBorder : decoration.enabledBorder;
+      border =
+          widget._hasError ? decoration.errorBorder : decoration.enabledBorder;
     }
-    border ??= WidgetStateProperty.resolveAs(decoration.border, _materialState(decoration));
+    border ??= WidgetStateProperty.resolveAs(
+        decoration.border, _materialState(decoration));
 
     if (border is OutlineInputBorder) {
       return border.borderRadius;
@@ -625,9 +643,10 @@ class _DropdownButton2State<T> extends State<DropdownButton2<T>> with WidgetsBin
   EdgeInsetsGeometry _buttonAdditionalHPadding() {
     final TextDirection? textDirection = Directionality.maybeOf(context);
 
-    final menuItemPadding = _menuItemStyle.padding?.resolve(textDirection) ?? _kMenuItemPadding;
-    final removeItemHPadding =
-        _menuItemStyle.useDecorationHorizontalPadding && _getInputDecorationPadding() != null;
+    final menuItemPadding =
+        _menuItemStyle.padding?.resolve(textDirection) ?? _kMenuItemPadding;
+    final removeItemHPadding = _menuItemStyle.useDecorationHorizontalPadding &&
+        _getInputDecorationPadding() != null;
     final effectiveMenuItemPadding = menuItemPadding.copyWith(
       left: removeItemHPadding ? 0 : null,
       right: removeItemHPadding ? 0 : null,
@@ -642,7 +661,8 @@ class _DropdownButton2State<T> extends State<DropdownButton2<T>> with WidgetsBin
 
   void _handleTap() {
     final NavigatorState navigator = Navigator.of(context,
-        rootNavigator: _dropdownStyle.isFullScreen ?? _dropdownStyle.useRootNavigator);
+        rootNavigator:
+            _dropdownStyle.isFullScreen ?? _dropdownStyle.useRootNavigator);
     final TextDirection? textDirection = Directionality.maybeOf(context);
 
     final items = widget.items!;
@@ -659,12 +679,13 @@ class _DropdownButton2State<T> extends State<DropdownButton2<T>> with WidgetsBin
       selectedIndex: _selectedIndex ?? 0,
       isNoSelectedItem: _selectedIndex == null,
       onChanged: widget.onChanged,
-      capturedThemes: InheritedTheme.capture(from: context, to: navigator.context),
+      capturedThemes:
+          InheritedTheme.capture(from: context, to: navigator.context),
       style: _textStyle!,
       barrierDismissible: widget.barrierDismissible,
       barrierColor: widget.barrierColor,
-      barrierLabel:
-          widget.barrierLabel ?? MaterialLocalizations.of(context).modalBarrierDismissLabel,
+      barrierLabel: widget.barrierLabel ??
+          MaterialLocalizations.of(context).modalBarrierDismissLabel,
       barrierCoversButton: widget.barrierCoversButton,
       parentFocusNode: _focusNode,
       enableFeedback: widget.enableFeedback ?? true,
@@ -683,7 +704,9 @@ class _DropdownButton2State<T> extends State<DropdownButton2<T>> with WidgetsBin
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _dropdownRoute?._childNode.requestFocus();
     });
-    navigator.push(_dropdownRoute!).then<void>((_DropdownRouteResult<T>? newValue) {
+    navigator
+        .push(_dropdownRoute!)
+        .then<void>((_DropdownRouteResult<T>? newValue) {
       _removeDropdownRoute();
       _isMenuOpen.value = false;
       widget.onMenuStateChange?.call(false);
@@ -697,12 +720,15 @@ class _DropdownButton2State<T> extends State<DropdownButton2<T>> with WidgetsBin
   // Similarly, we don't reduce the height of the button so much that its icon
   // would be clipped.
   double get _denseButtonHeight {
-    final double fontSize =
-        _textStyle!.fontSize ?? Theme.of(context).textTheme.titleMedium!.fontSize!;
-    final double lineHeight =
-        _textStyle!.height ?? Theme.of(context).textTheme.titleMedium!.height ?? 1.0;
-    final double scaledFontSize = MediaQuery.textScalerOf(context).scale(fontSize * lineHeight);
-    return math.max(scaledFontSize, math.max(_iconStyle.iconSize, _kDenseButtonHeight));
+    final double fontSize = _textStyle!.fontSize ??
+        Theme.of(context).textTheme.titleMedium!.fontSize!;
+    final double lineHeight = _textStyle!.height ??
+        Theme.of(context).textTheme.titleMedium!.height ??
+        1.0;
+    final double scaledFontSize =
+        MediaQuery.textScalerOf(context).scale(fontSize * lineHeight);
+    return math.max(
+        scaledFontSize, math.max(_iconStyle.iconSize, _kDenseButtonHeight));
   }
 
   Color get _iconColor {
@@ -723,7 +749,10 @@ class _DropdownButton2State<T> extends State<DropdownButton2<T>> with WidgetsBin
     }
   }
 
-  bool get _enabled => widget.items != null && widget.items!.isNotEmpty && widget.onChanged != null;
+  bool get _enabled =>
+      widget.items != null &&
+      widget.items!.isNotEmpty &&
+      widget.onChanged != null;
 
   Orientation _getOrientation(BuildContext context) {
     Orientation? result = MediaQuery.maybeOrientationOf(context);
@@ -731,14 +760,16 @@ class _DropdownButton2State<T> extends State<DropdownButton2<T>> with WidgetsBin
       // If there's no MediaQuery, then use the current FlutterView to determine
       // orientation.
       final Size size = View.of(context).physicalSize;
-      result = size.width > size.height ? Orientation.landscape : Orientation.portrait;
+      result = size.width > size.height
+          ? Orientation.landscape
+          : Orientation.portrait;
     }
     return result;
   }
 
   BorderRadius? _getButtonBorderRadius(BuildContext context) {
-    final buttonRadius =
-        _buttonStyle?.decoration?.borderRadius ?? _buttonStyle?.foregroundDecoration?.borderRadius;
+    final buttonRadius = _buttonStyle?.decoration?.borderRadius ??
+        _buttonStyle?.foregroundDecoration?.borderRadius;
     if (buttonRadius != null) {
       return buttonRadius.resolve(Directionality.maybeOf(context));
     }
@@ -768,7 +799,8 @@ class _DropdownButton2State<T> extends State<DropdownButton2<T>> with WidgetsBin
 
     int? hintIndex;
     if (widget.hint != null || (!_enabled && widget.disabledHint != null)) {
-      final Widget displayedHint = _enabled ? widget.hint! : widget.disabledHint ?? widget.hint!;
+      final Widget displayedHint =
+          _enabled ? widget.hint! : widget.disabledHint ?? widget.hint!;
 
       hintIndex = buttonItems.length;
       buttonItems.add(DefaultTextStyle(
@@ -780,17 +812,20 @@ class _DropdownButton2State<T> extends State<DropdownButton2<T>> with WidgetsBin
     }
 
     final EdgeInsetsGeometry padding =
-        ButtonTheme.of(context).alignedDropdown && widget._inputDecoration == null
+        ButtonTheme.of(context).alignedDropdown &&
+                widget._inputDecoration == null
             ? _kAlignedButtonPadding
             : _kUnalignedButtonPadding;
 
-    final buttonHeight = _buttonStyle?.height ?? (widget.isDense ? _denseButtonHeight : null);
+    final buttonHeight =
+        _buttonStyle?.height ?? (widget.isDense ? _denseButtonHeight : null);
 
     final Widget innerItemsWidget = buttonItems.isEmpty
         ? const SizedBox.shrink()
         : ValueListenableBuilder(
-            valueListenable:
-                widget.valueListenable ?? widget.multiValueListenable ?? ValueNotifier(null),
+            valueListenable: widget.valueListenable ??
+                widget.multiValueListenable ??
+                ValueNotifier(null),
             builder: (context, _, __) {
               _uniqueValueAssert(
                 widget.items,
@@ -827,7 +862,9 @@ class _DropdownButton2State<T> extends State<DropdownButton2<T>> with WidgetsBin
           );
 
     Widget result = DefaultTextStyle(
-      style: _enabled ? _textStyle! : _textStyle!.copyWith(color: Theme.of(context).disabledColor),
+      style: _enabled
+          ? _textStyle!
+          : _textStyle!.copyWith(color: Theme.of(context).disabledColor),
       child: widget.customButton ??
           _ConditionalDecoratedBox(
             decoration: _buttonStyle?.decoration?.copyWith(
@@ -853,7 +890,10 @@ class _DropdownButton2State<T> extends State<DropdownButton2<T>> with WidgetsBin
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  if (widget.isExpanded) Expanded(child: innerItemsWidget) else innerItemsWidget,
+                  if (widget.isExpanded)
+                    Expanded(child: innerItemsWidget)
+                  else
+                    innerItemsWidget,
                   IconTheme(
                     data: IconThemeData(
                       color: _iconColor,
@@ -902,7 +942,8 @@ class _DropdownButton2State<T> extends State<DropdownButton2<T>> with WidgetsBin
       );
     }
 
-    final MouseCursor effectiveMouseCursor = WidgetStateProperty.resolveAs<MouseCursor>(
+    final MouseCursor effectiveMouseCursor =
+        WidgetStateProperty.resolveAs<MouseCursor>(
       WidgetStateMouseCursor.clickable,
       <WidgetState>{
         if (!_enabled) WidgetState.disabled,
@@ -925,7 +966,8 @@ class _DropdownButton2State<T> extends State<DropdownButton2<T>> with WidgetsBin
         final focusColor = effectiveDecoration.focusColor;
         // For compatibility, override the fill color when focusColor is set.
         if (focusColor != null) {
-          effectiveDecoration = effectiveDecoration.copyWith(fillColor: focusColor);
+          effectiveDecoration =
+              effectiveDecoration.copyWith(fillColor: focusColor);
         }
       }
       result = Focus(
@@ -950,7 +992,8 @@ class _DropdownButton2State<T> extends State<DropdownButton2<T>> with WidgetsBin
           cursor: effectiveMouseCursor,
           child: GestureDetector(
             onTap: _enabled && !widget.openWithLongPress ? _handleTap : null,
-            onLongPress: _enabled && widget.openWithLongPress ? _handleTap : null,
+            onLongPress:
+                _enabled && widget.openWithLongPress ? _handleTap : null,
             behavior: HitTestBehavior.opaque,
             child: InputDecorator(
               decoration: effectiveDecoration,
@@ -977,8 +1020,8 @@ class _DropdownButton2State<T> extends State<DropdownButton2<T>> with WidgetsBin
       );
     }
 
-    final bool childHasButtonSemantic =
-        hintIndex != null || (_selectedIndex != null && widget.selectedItemBuilder == null);
+    final bool childHasButtonSemantic = hintIndex != null ||
+        (_selectedIndex != null && widget.selectedItemBuilder == null);
     return Semantics(
       button: !childHasButtonSemantic,
       child: Actions(
@@ -1057,14 +1100,19 @@ class DropdownButtonFormField2<T> extends FormField<T> {
           builder: (FormFieldState<T> field) {
             final _DropdownButtonFormField2State<T> state =
                 field as _DropdownButtonFormField2State<T>;
-            final InputDecoration decorationArg = decoration ?? const InputDecoration();
-            final InputDecoration effectiveDecoration = decorationArg.applyDefaults(
+            final InputDecoration decorationArg =
+                decoration ?? const InputDecoration();
+            final InputDecoration effectiveDecoration =
+                decorationArg.applyDefaults(
               Theme.of(field.context).inputDecorationTheme,
             );
 
             final bool showSelectedItem = items != null &&
-                items.where((DropdownItem<T> item) => item.value == state.value).isNotEmpty;
-            final bool isDropdownEnabled = onChanged != null && items != null && items.isNotEmpty;
+                items
+                    .where((DropdownItem<T> item) => item.value == state.value)
+                    .isNotEmpty;
+            final bool isDropdownEnabled =
+                onChanged != null && items != null && items.isNotEmpty;
             // If decoration hintText is provided, use it as the default value for both hint and disabledHint.
             final Widget? decorationHint = effectiveDecoration.hintText != null
                 ? Text(
@@ -1079,11 +1127,16 @@ class DropdownButtonFormField2<T> extends FormField<T> {
             final bool isHintOrDisabledHintAvailable = isDropdownEnabled
                 ? effectiveHint != null
                 : effectiveHint != null || effectiveDisabledHint != null;
-            final bool isEmpty = !showSelectedItem && !isHintOrDisabledHintAvailable;
+            final bool isEmpty =
+                !showSelectedItem && !isHintOrDisabledHintAvailable;
 
-            final bool hasError = field.hasError ||
-                effectiveDecoration.errorText != null ||
-                effectiveDecoration.error != null;
+            final bool shouldHideError =
+                (effectiveDecoration.errorStyle?.height ?? 1) == 0;
+
+            final bool hasError = !shouldHideError &&
+                (field.hasError ||
+                    effectiveDecoration.errorText != null ||
+                    effectiveDecoration.error != null);
 
             // An unFocusable Focus widget so that this widget can detect if its
             // descendants have focus or not.
@@ -1147,7 +1200,8 @@ class DropdownButtonFormField2<T> extends FormField<T> {
 }
 
 class _DropdownButtonFormField2State<T> extends FormFieldState<T> {
-  DropdownButtonFormField2<T> get _dropdownButtonFormField => widget as DropdownButtonFormField2<T>;
+  DropdownButtonFormField2<T> get _dropdownButtonFormField =>
+      widget as DropdownButtonFormField2<T>;
 
   @override
   void didChange(T? value) {
